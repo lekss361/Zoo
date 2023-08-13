@@ -161,34 +161,36 @@ const floor2:Floor={
         }
     },
     CheckAddAnimal: function (a: CurrentAnimal): boolean {
+        let result:boolean=true;
         if (this.Biome != a.Biome) {
             console.log("Биом не подходит");
-            return false;
+            result=false;
         }
         if (this.Water != a.Water && a.Water != false) {
             console.log("Нужна Вода");
-            return false;
+            result=false;
         }
         if (this.FreeSquare() < a.NeedSquare) {
             console.log("Нужно нужно больше места");
-            return false;
+            result=false;
         }
         if (a.AnimalType == "Carnivorous") {
+            
             this.Animals.forEach(element => {
                 if (element.AnimalKind != a.AnimalKind) {
                     console.log("Плотоядные должны быть одного вида");
-                    return false;
+                    result=false;
                 }
             });
         } else {
             this.Animals.forEach(element => {
                 if (element.AnimalType != a.AnimalType) {
                     console.log("Травоядные должны жить с травоядными");
-                    return false;
+                    result=false;
                 }
             });
         }
-        return true;
+        return result;
 
     },
     Delete: function (name: string): boolean {
