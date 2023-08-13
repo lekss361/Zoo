@@ -76,69 +76,73 @@ const jiraf:CurrentAnimal={
     Eat: "Grass",
     AnimalType: "Herbivore"
 }
+function AddAnimal(a: CurrentAnimal): void {
+    if (this.CheckAddAnimal(a)) {
+        this.Animals.push(a);
+    }else{
+
+        console.log(`требования не подходят для ${a.Name} ${a.AnimalKind}`);
+    }
+}
+function CheckAddAnimalInMass (a: CurrentAnimal): boolean {
+    if (this.Biome != a.Biome) {
+        console.log("Биом не подходит");
+        return false;
+    }
+    
+    if(a.Water==true&&this.Water ==false){
+            console.log("Нужна Вода");
+            return false;
+    }
+    if (this.FreeSquare() < a.NeedSquare) {
+        console.log("Нужно нужно больше места");
+        return false;
+    }
+    if (a.AnimalType == "Carnivorous") {
+        this.Animals.forEach(element => {
+            if (element.AnimalKind != a.AnimalKind) {
+                console.log("Плотоядные должны быть одного вида");
+                return false;
+            }
+        });
+    } else {
+        this.Animals.forEach(element => {
+            if (element.AnimalType != a.AnimalType) {
+                console.log("Травоядные должны жить с травоядными");
+                return false;
+            }
+        });
+    }
+    return true;
+}
+function FreeSquareInFloor(): number {
+    let freesquare = this.Square;
+    this.Animals.forEach(element => {
+        freesquare -= element.NeedSquare;
+    });
+    return freesquare;
+}
+function DeleteInMass(name: string): boolean {
+       
+    this.Animals.forEach((element,index) => {
+       if(element.Name==name){
+        this.Animals.splice(index,1);
+        return true
+       }
+    });
+    console.log("животное не найдено")
+    return false;
+}
+
 const floor1:Floor={
     Animals: [],
     Biome: Biome.Desert,
     Water: false,
     Square: 10,
-    FreeSquare: function (): number {
-        let freesquare = this.Square;
-        this.Animals.forEach(element => {
-            freesquare -= element.NeedSquare;
-        });
-        return freesquare;
-    },
-    Add: function (a: CurrentAnimal): void {
-        if (this.CheckAddAnimal(a)) {
-            this.Animals.push(a);
-        }else{
-
-            console.log(`требования не подходят для ${a.Name} ${a.AnimalType}`);
-        }
-    },
-    CheckAddAnimal: function (a: CurrentAnimal): boolean {
-        if (this.Biome != a.Biome) {
-            console.log("Биом не подходит");
-            return false;
-        }
-        
-        if(a.Water==true&&this.Water ==false){
-                console.log("Нужна Вода");
-                return false;
-        }
-        if (this.FreeSquare() < a.NeedSquare) {
-            console.log("Нужно нужно больше места");
-            return false;
-        }
-        if (a.AnimalType == "Carnivorous") {
-            this.Animals.forEach(element => {
-                if (element.AnimalKind != a.AnimalKind) {
-                    console.log("Плотоядные должны быть одного вида");
-                    return false;
-                }
-            });
-        } else {
-            this.Animals.forEach(element => {
-                if (element.AnimalType != a.AnimalType) {
-                    console.log("Травоядные должны жить с травоядными");
-                    return false;
-                }
-            });
-        }
-        return true;
-
-    },
-    Delete: function (name: string): boolean {
-       
-        this.Animals.forEach((element,index) => {
-           if(element.Name==name){
-            this.Animals.splice(index,1);
-            return true
-           }
-        });
-        console.log("животное не найдено")
-        return false;
-    }
+    FreeSquare: FreeSquareInFloor,
+    Add: AddAnimal,
+    CheckAddAnimal:CheckAddAnimalInMass,
+    Delete: DeleteInMass
 }
 
 const floor2:Floor={
@@ -146,66 +150,12 @@ const floor2:Floor={
     Biome: Biome.Tundra,
     Water: true,
     Square: 20,
-    FreeSquare: function (): number {
-        let freesquare = this.Square;
-        this.Animals.forEach(element => {
-            freesquare -= element.NeedSquare;
-        });
-        return freesquare;
-    },
-    Add: function (a: CurrentAnimal): void {
-        if (this.CheckAddAnimal(a)) {
-            this.Animals.push(a);
-        }else{
-
-            console.log(`требования не подходят для ${a.Name} ${a.AnimalKind}`);
-        }
-    },
-    CheckAddAnimal: function (a: CurrentAnimal): boolean {
-        let result:boolean=true;
-        if (this.Biome != a.Biome) {
-            console.log("Биом не подходит");
-            result=false;
-        }
-        if (this.Water != a.Water && a.Water != false) {
-            console.log("Нужна Вода");
-            result=false;
-        }
-        if (this.FreeSquare() < a.NeedSquare) {
-            console.log("Нужно нужно больше места");
-            result=false;
-        }
-        if (a.AnimalType == "Carnivorous") {
-            
-            this.Animals.forEach(element => {
-                if (element.AnimalKind != a.AnimalKind) {
-                    console.log("Плотоядные должны быть одного вида");
-                    result=false;
-                }
-            });
-        } else {
-            this.Animals.forEach(element => {
-                if (element.AnimalType != a.AnimalType) {
-                    console.log("Травоядные должны жить с травоядными");
-                    result=false;
-                }
-            });
-        }
-        return result;
-
-    },
-    Delete: function (name: string): boolean {
-       
-        this.Animals.forEach((element,index) => {
-           if(element.Name==name){
-            this.Animals.splice(index,1);
-            return true
-           }
-        });
-        console.log("животное не найдено")
-        return false;
-    }
+    FreeSquare: FreeSquareInFloor,
+    Add: AddAnimal,
+    CheckAddAnimal:CheckAddAnimalInMass,
+    Delete: DeleteInMass
 }
+
 let zoo:Zoo={
     Floor: [floor1,floor2],
     HowMuchFood: function (): number {
