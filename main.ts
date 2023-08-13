@@ -101,9 +101,10 @@ const floor1:Floor={
             console.log("Биом не подходит");
             return false;
         }
-        if (this.Water != a.Water || a.Water != false) {
-            console.log("Нужна Вода");
-            return false;
+        
+        if(a.Water==true&&this.Water ==false){
+                console.log("Нужна Вода");
+                return false;
         }
         if (this.FreeSquare() < a.NeedSquare) {
             console.log("Нужно нужно больше места");
