@@ -1,11 +1,42 @@
-console.log('hellojopa');
-var Biome;
-(function (Biome) {
-    Biome["Desert"] = "Desert";
-    Biome["Tundra"] = "Tundra";
-    Biome["Tropical"] = "Tropical";
-})(Biome || (Biome = {}));
-var bear = {
+console.log('hellojopa')
+interface Zoo{
+    Floor: Floor[]
+    HowMuchFood():number;
+}
+interface Floor{
+ Animals:CurrentAnimal[],
+ Biome:Biome,
+ Water:boolean,
+ Square:number
+ Add(a:CurrentAnimal):void;
+ CheckAddAnimal(a:CurrentAnimal):boolean;
+ FreeSquare():number;
+ Delete(name:string):boolean;
+}
+
+interface AbstractAnimal{
+    AnimalKind:AnimalKinds;
+    Biome:Biome;
+    Water:boolean;
+    NeedSquare:number;
+    Eat:Eats;
+    AnimalType:AnimalTypes;
+}
+interface CurrentAnimal extends AbstractAnimal{
+Name: string;
+CountEat:number;
+}
+
+enum Biome{
+    Desert='Desert',
+    Tundra='Tundra',
+    Tropical='Tropical' 
+}
+type Eats= "Fish"|"Grass"|"Meet";
+type AnimalTypes="Herbivore"|"Carnivorous"
+type AnimalKinds= "Bear"|"Camel"|"Tiger"|"Lion"|"jiraf"
+
+const bear:CurrentAnimal={
     Name: "Stepa",
     CountEat: 5,
     AnimalKind: "Bear",
@@ -14,8 +45,8 @@ var bear = {
     NeedSquare: 5,
     Eat: "Fish",
     AnimalType: "Carnivorous"
-};
-var tiger = {
+}
+const tiger:CurrentAnimal={
     Name: "Petya",
     CountEat: 10,
     AnimalKind: "Tiger",
@@ -24,8 +55,8 @@ var tiger = {
     NeedSquare: 10,
     Eat: "Meet",
     AnimalType: "Carnivorous"
-};
-var camel = {
+}
+const camel:CurrentAnimal={
     Name: "Sergey",
     CountEat: 1,
     AnimalKind: "Camel",
@@ -34,8 +65,8 @@ var camel = {
     NeedSquare: 1,
     Eat: "Grass",
     AnimalType: "Herbivore"
-};
-var jiraf = {
+}
+const jiraf:CurrentAnimal={
     Name: "Pitek",
     CountEat: 1,
     AnimalKind: "jiraf",
@@ -44,28 +75,28 @@ var jiraf = {
     NeedSquare: 1,
     Eat: "Grass",
     AnimalType: "Herbivore"
-};
-var floor1 = {
+}
+const floor1:Floor={
     Animals: [],
     Biome: Biome.Desert,
     Water: false,
     Square: 10,
-    FreeSquare: function () {
-        var freesquare = this.Square;
-        this.Animals.forEach(function (element) {
+    FreeSquare: function (): number {
+        let freesquare = this.Square;
+        this.Animals.forEach(element => {
             freesquare -= element.NeedSquare;
         });
         return freesquare;
     },
-    Add: function (a) {
+    Add: function (a: CurrentAnimal): void {
         if (this.CheckAddAnimal(a)) {
             this.Animals.push(a);
-        }
-        else {
-            console.log("\u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u043D\u0435 \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0442 \u0434\u043B\u044F ".concat(a.Name, " ").concat(a.AnimalType));
+        }else{
+
+            console.log(`требования не подходят для ${a.Name} ${a.AnimalType}`);
         }
     },
-    CheckAddAnimal: function (a) {
+    CheckAddAnimal: function (a: CurrentAnimal): boolean {
         if (this.Biome != a.Biome) {
             console.log("Биом не подходит");
             return false;
@@ -79,15 +110,14 @@ var floor1 = {
             return false;
         }
         if (a.AnimalType == "Carnivorous") {
-            this.Animals.forEach(function (element) {
+            this.Animals.forEach(element => {
                 if (element.AnimalKind != a.AnimalKind) {
                     console.log("Плотоядные должны быть одного вида");
                     return false;
                 }
             });
-        }
-        else {
-            this.Animals.forEach(function (element) {
+        } else {
+            this.Animals.forEach(element => {
                 if (element.AnimalType != a.AnimalType) {
                     console.log("Травоядные должны жить с травоядными");
                     return false;
@@ -95,40 +125,42 @@ var floor1 = {
             });
         }
         return true;
+
     },
-    Delete: function (name) {
-        var _this = this;
-        this.Animals.forEach(function (element, index) {
-            if (element.Name == name) {
-                _this.Animals.splice(index, 1);
-                return true;
-            }
+    Delete: function (name: string): boolean {
+       
+        this.Animals.forEach((element,index) => {
+           if(element.Name==name){
+            this.Animals.splice(index,1);
+            return true
+           }
         });
-        console.log("животное не найдено");
+        console.log("животное не найдено")
         return false;
     }
-};
-var floor2 = {
+}
+
+const floor2:Floor={
     Animals: [],
     Biome: Biome.Tundra,
     Water: true,
     Square: 20,
-    FreeSquare: function () {
-        var freesquare = this.Square;
-        this.Animals.forEach(function (element) {
+    FreeSquare: function (): number {
+        let freesquare = this.Square;
+        this.Animals.forEach(element => {
             freesquare -= element.NeedSquare;
         });
         return freesquare;
     },
-    Add: function (a) {
+    Add: function (a: CurrentAnimal): void {
         if (this.CheckAddAnimal(a)) {
             this.Animals.push(a);
-        }
-        else {
-            console.log("\u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u043D\u0435 \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0442 \u0434\u043B\u044F ".concat(a.Name, " ").concat(a.AnimalKind));
+        }else{
+
+            console.log(`требования не подходят для ${a.Name} ${a.AnimalKind}`);
         }
     },
-    CheckAddAnimal: function (a) {
+    CheckAddAnimal: function (a: CurrentAnimal): boolean {
         if (this.Biome != a.Biome) {
             console.log("Биом не подходит");
             return false;
@@ -142,15 +174,14 @@ var floor2 = {
             return false;
         }
         if (a.AnimalType == "Carnivorous") {
-            this.Animals.forEach(function (element) {
+            this.Animals.forEach(element => {
                 if (element.AnimalKind != a.AnimalKind) {
                     console.log("Плотоядные должны быть одного вида");
                     return false;
                 }
             });
-        }
-        else {
-            this.Animals.forEach(function (element) {
+        } else {
+            this.Animals.forEach(element => {
                 if (element.AnimalType != a.AnimalType) {
                     console.log("Травоядные должны жить с травоядными");
                     return false;
@@ -158,33 +189,34 @@ var floor2 = {
             });
         }
         return true;
+
     },
-    Delete: function (name) {
-        var _this = this;
-        this.Animals.forEach(function (element, index) {
-            if (element.Name == name) {
-                _this.Animals.splice(index, 1);
-                return true;
-            }
+    Delete: function (name: string): boolean {
+       
+        this.Animals.forEach((element,index) => {
+           if(element.Name==name){
+            this.Animals.splice(index,1);
+            return true
+           }
         });
-        console.log("животное не найдено");
+        console.log("животное не найдено")
         return false;
     }
-};
-var zoo = {
-    Floor: [floor1, floor2],
-    HowMuchFood: function () {
-        var number = 0;
-        zoo.Floor.forEach(function (element) {
-            element.Animals.forEach(function (element) {
-                number += element.CountEat;
+}
+let zoo:Zoo={
+    Floor: [floor1,floor2],
+    HowMuchFood: function (): number {
+        let number:number=0;
+        zoo.Floor.forEach(element => {
+            element.Animals.forEach(element => {
+                number+=element.CountEat;
             });
         });
         return number;
     }
-};
+}
 zoo.Floor[1].Add(bear);
 zoo.Floor[0].Add(camel);
 zoo.Floor[0].Add(jiraf);
 zoo.Floor[1].Add(tiger);
-console.log("\u0447\u0442\u043E\u0431\u044B \u043D\u0430\u043A\u043E\u0440\u043C\u0438\u0442\u044C \u043D\u0443\u0436\u043D\u043E ".concat(zoo.HowMuchFood(), " \u0435\u0434\u044B"));
+console.log(`чтобы накормить нужно ${zoo.HowMuchFood()} еды`)
